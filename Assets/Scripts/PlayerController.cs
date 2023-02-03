@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public int maxHealth = 5;
     public float speed = 3f;
-
+    public int Health {get => currentHealth;}
     Rigidbody2D rigidbody2d;
     float horizontal;
     float vertical;
+    int currentHealth;
+    int coinAmount = 0;
     // Start is called before the first frame update
     void Start()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
+        // currentHealth = maxHealth;
+        currentHealth = 3;
     }
 
     // Update is called once per frame
@@ -30,5 +35,17 @@ public class PlayerController : MonoBehaviour
         position.y += speed * Time.deltaTime * vertical;
 
         rigidbody2d.MovePosition(position);
+    }
+
+    public void ChangeHealth(int amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        Debug.Log(currentHealth + "/" + maxHealth);
+    }
+
+    public void IncreaseCoin(int amount)
+    {
+        coinAmount += amount;
+        Debug.Log(coinAmount);
     }
 }
