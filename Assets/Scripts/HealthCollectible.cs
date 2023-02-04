@@ -19,13 +19,13 @@ public class HealthCollectible : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        PlayerController player = other.GetComponent<PlayerController>();
+        PlayerController controller = other.GetComponent<PlayerController>();
 
-        if (player != null)
+        if (controller != null)
         {
-            if (player.Health < player.maxHealth)
+            if (controller.Health < controller.maxHealth)
             {
-                player.ChangeHealth(amount);
+                controller.ChangeHealth(amount);
                 Destroy(gameObject);
             }
         }

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoinCollectible : MonoBehaviour
+public class DamageZone : MonoBehaviour
 {
-    public int amount = 1;
+    public int damage = -1;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,14 +17,13 @@ public class CoinCollectible : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D other) 
+    private void OnTriggerStay2D(Collider2D other)
     {
         PlayerController controller = other.GetComponent<PlayerController>();
 
-        if (controller != null)    
+        if (controller != null)
         {
-            controller.IncreaseCoin(amount);
-            Destroy(gameObject);
+            controller.ChangeHealth(damage);
         }
     }
 }
