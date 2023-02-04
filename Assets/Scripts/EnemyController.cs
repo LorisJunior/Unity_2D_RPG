@@ -68,9 +68,7 @@ public class EnemyController : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("foi");
         DropLoot();
-
         Destroy(gameObject);
     }
 
