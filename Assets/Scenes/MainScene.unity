@@ -103738,7 +103738,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4196746284417331098, guid: e51cb6e27dea40741857366b4785c72c, type: 3}
       propertyPath: m_Name
-      value: mole
+      value: NPC
       objectReference: {fileID: 0}
     - target: {fileID: 5058707594360181668, guid: e51cb6e27dea40741857366b4785c72c, type: 3}
       propertyPath: m_RootOrder

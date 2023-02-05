@@ -71,6 +71,22 @@ public class PlayerController : MonoBehaviour
             canAttack = false;
             attackTimer = attackInterval;
         }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
+
+            //If you are 1.5m of the NPC display a dialog quest
+            if (hit.collider != null)
+            {
+                Quest quest = hit.collider.GetComponent<Quest>();
+
+                if (quest != null)
+                {
+                    quest.DisplayQuest();
+                }
+            }
+        }
     }
 
     void FixedUpdate() 
