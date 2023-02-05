@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CoinCollectible : MonoBehaviour
 {
+    public AudioClip audioClip;
     public int amount = 1;
 
     private void OnTriggerEnter2D(Collider2D other) 
@@ -11,6 +12,7 @@ public class CoinCollectible : MonoBehaviour
         if (controller != null)    
         {
             controller.IncreaseCoin(amount);
+            controller.PlaySound(audioClip);
             Destroy(gameObject);
         }
     }

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public AudioClip hurt;
+    public AudioClip footsteps;
+    public AudioClip questSound;
+    public AudioClip arrowSound;
     public float attackInterval = 0.5f;
     public UICoinText coinText;
     public UIHealthBar UIHealth;
@@ -13,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 3f;
     public int Health {get => currentHealth;}
 
+    AudioSource audioSource;
     float attackTimer;
     bool canAttack = true;
     Rigidbody2D rigidbody2d;
@@ -29,6 +34,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth;
@@ -39,8 +45,6 @@ public class PlayerController : MonoBehaviour
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
-
-        
 
         //Deactivate invincible mode after some seconds
         InvincibleTime();
@@ -84,9 +88,12 @@ public class PlayerController : MonoBehaviour
                 if (quest != null)
                 {
                     quest.DisplayQuest();
+                    PlaySound(questSound);
                 }
             }
         }
+
+        HandleFootstep(move);
     }
 
     void FixedUpdate() 
@@ -112,6 +119,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void HandleFootstep(Vector2 move)
+    {
+        
+    }
+
     void Attack()
     {
         GameObject arrowObject = Instantiate(arrowPrefab, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
@@ -124,6 +136,7 @@ public class PlayerController : MonoBehaviour
         arrow.Launch(lookDirection, 300f);
 
         animator.SetTrigger("Attack");
+        PlaySound(arrowSound);
     }
     
     public void ChangeHealth(int amount)
@@ -139,6 +152,7 @@ public class PlayerController : MonoBehaviour
             invincibleTimer = timeInvincible;
 
             animator.SetTrigger("Hit");
+            PlaySound(hurt);
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
@@ -149,5 +163,10 @@ public class PlayerController : MonoBehaviour
     {
         coinAmount += amount;
         coinText.IncreaseCoinUI(coinAmount);
+    }
+
+    public void PlaySound(AudioClip audioClip)
+    {
+        audioSource.PlayOneShot(audioClip);
     }
 }

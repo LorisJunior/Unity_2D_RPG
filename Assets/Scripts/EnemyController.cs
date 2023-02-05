@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public AudioClip die;
     public UIHealthBar UIHealth;
     public int maxHealth = 3;
     public GameObject coin;
@@ -12,6 +13,7 @@ public class EnemyController : MonoBehaviour
     public bool vertical;
     public float changeTime = 2f;
 
+    PlayerController controller;
     int currentHealth;
     Animator animator;
     Rigidbody2D rigidbody2d;
@@ -20,6 +22,7 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        controller = GameObject.Find("Player").GetComponent<PlayerController>();
         currentHealth = maxHealth;
         animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
@@ -82,6 +85,7 @@ public class EnemyController : MonoBehaviour
 
     void Die()
     {
+        controller.PlaySound(die);
         DropLoot();
         Destroy(gameObject);
     }
