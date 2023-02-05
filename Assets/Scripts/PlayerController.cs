@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float attackInterval = 0.5f;
+    public UICoinText coinText;
+    public UIHealthBar UIHealth;
     public GameObject arrowPrefab;
     public float timeInvincible = 2f;
     public int maxHealth = 5;
     public float speed = 3f;
     public int Health {get => currentHealth;}
+
+    float attackTimer;
+    bool canAttack = true;
     Rigidbody2D rigidbody2d;
     float horizontal;
     float vertical;
@@ -19,6 +25,7 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     Vector2 lookDirection = new Vector2(1,0);
     Vector3 zAxis = new Vector3(0, 0, 1);
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,8 +37,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
+        horizontal = Input.GetAxisRaw("Horizontal");
+        vertical = Input.GetAxisRaw("Vertical");
+
+        
 
         //Deactivate invincible mode after some seconds
         InvincibleTime();
@@ -48,9 +57,19 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("Look Y", lookDirection.y);
         animator.SetFloat("Speed", move.magnitude);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!canAttack)
+        {
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer < 0)
+                canAttack = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && canAttack)
         {
             Attack();
+            canAttack = false;
+            attackTimer = attackInterval;
         }
     }
 
@@ -81,7 +100,9 @@ public class PlayerController : MonoBehaviour
     {
         GameObject arrowObject = Instantiate(arrowPrefab, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
 
-        RotateArrow(ref arrowObject);
+        //Rotate the arrow in the look direction
+        float angle = Vector2.SignedAngle(Vector2.right, lookDirection) -90f;
+        arrowObject.transform.rotation = Quaternion.AngleAxis(angle, zAxis);
 
         Projectile arrow = arrowObject.GetComponent<Projectile>();
         arrow.Launch(lookDirection, 300f);
@@ -105,24 +126,12 @@ public class PlayerController : MonoBehaviour
         }
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        Debug.Log(currentHealth + "/" + maxHealth);
+        UIHealth.SetValue(currentHealth/(float)maxHealth);
     }
 
     public void IncreaseCoin(int amount)
     {
         coinAmount += amount;
-        Debug.Log(coinAmount);
-    }
-    
-    void RotateArrow(ref GameObject arrowObject)
-    {
-        if (lookDirection.x == 1)
-            arrowObject.transform.rotation = Quaternion.AngleAxis(-90, zAxis);
-        if (lookDirection.x == -1)
-            arrowObject.transform.rotation = Quaternion.AngleAxis(90, zAxis);
-        if (lookDirection.y == 1)
-            arrowObject.transform.rotation = Quaternion.identity;
-        if (lookDirection.y == -1)
-            arrowObject.transform.rotation = Quaternion.AngleAxis(180, zAxis);
+        coinText.IncreaseCoinUI(coinAmount);
     }
 }

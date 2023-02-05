@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public UIHealthBar UIHealth;
+    public int maxHealth = 3;
     public GameObject coin;
     public GameObject heart;
     public GameObject gem;
@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     public bool vertical;
     public float changeTime = 2f;
 
+    int currentHealth;
     Animator animator;
     Rigidbody2D rigidbody2d;
     int direction = -1;
@@ -19,6 +20,7 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentHealth = maxHealth;
         animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
         timer = changeTime;
@@ -36,7 +38,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void FixedUpdate() 
+    void FixedUpdate() 
     {
         Vector2 position = rigidbody2d.position;
 
@@ -56,7 +58,7 @@ public class EnemyController : MonoBehaviour
         rigidbody2d.MovePosition(position);
     }
 
-    private void OnCollisionEnter2D(Collision2D other) 
+    void OnCollisionEnter2D(Collision2D other) 
     {
         PlayerController controller = other.gameObject.GetComponent<PlayerController>();
 
@@ -64,12 +66,6 @@ public class EnemyController : MonoBehaviour
         {
             controller.ChangeHealth(damage);
         }
-    }
-
-    public void Die()
-    {
-        DropLoot();
-        Destroy(gameObject);
     }
 
     void DropLoot()
@@ -83,4 +79,23 @@ public class EnemyController : MonoBehaviour
         if (lootChance > 75)
             Instantiate(gem,rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
     }
+
+    void Die()
+    {
+        DropLoot();
+        Destroy(gameObject);
+    }
+
+    public void ChangeHealth(int amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+
+        UIHealth.SetValue(currentHealth/(float)maxHealth);
+
+        if (currentHealth == 0)
+        {
+            Die();
+        }
+    }
+    
 }
