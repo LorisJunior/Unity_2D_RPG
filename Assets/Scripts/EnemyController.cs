@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public GameObject deathVFX;
     public AudioClip die;
     public UIHealthBar UIHealth;
     public int maxHealth = 3;
@@ -85,6 +86,7 @@ public class EnemyController : MonoBehaviour
 
     void Die()
     {
+        Instantiate(deathVFX, rigidbody2d.position + Vector2.up * 0.7f, Quaternion.identity);
         controller.PlaySound(die);
         DropLoot();
         Destroy(gameObject);

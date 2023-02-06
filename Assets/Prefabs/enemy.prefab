@@ -340,6 +340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58cf66389b2d2347ad0c175c4aec722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathVFX: {fileID: 4905852504621184333, guid: bb41a687acefcf341bdb50732520422b, type: 3}
   die: {fileID: 8300000, guid: c6546a87ec8cd8e4d8cc50ea7b624513, type: 3}
   UIHealth: {fileID: 2906306522043516529}
   maxHealth: 3
