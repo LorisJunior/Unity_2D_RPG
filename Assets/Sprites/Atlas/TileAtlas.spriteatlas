@@ -45,11 +45,26 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 2800000, guid: fa9008ba27d044823835d85918621932, type: 3}
+    - {fileID: 102900000, guid: 8916a4b035b1b2947bb695de74376651, type: 3}
+    - {fileID: 102900000, guid: 6b598df917e2f4bc1ab4004a1d4eed1b, type: 3}
+    - {fileID: 102900000, guid: a9b87a1d2e53c4e6789106ac6536b371, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: -1512269633, guid: 27039490801193c41ba711f1269667f5, type: 3}
+  - {fileID: 379222466, guid: 27039490801193c41ba711f1269667f5, type: 3}
+  - {fileID: 1872460103, guid: 27039490801193c41ba711f1269667f5, type: 3}
+  - {fileID: 21300000, guid: 6bfed3e064429ff4caefc66c47b775dd, type: 3}
+  - {fileID: 21300000, guid: 00ef87d1935842843bd071b70224d82e, type: 3}
+  - {fileID: 21300000, guid: 606bc7833699b46bfb26e8141d2a64a7, type: 3}
+  - {fileID: 21300000, guid: db07cc93e21f1457d9a1364618027fbb, type: 3}
+  - {fileID: 21300000, guid: 37eaf6e537ca749adaaea0a3e900d411, type: 3}
+  - {fileID: 21300000, guid: 2eb82ac66de274383af71b2eb2c75da0, type: 3}
+  - {fileID: 21300000, guid: dbc624f7b3a644dcf989e434e63d9a98, type: 3}
+  - {fileID: 21300000, guid: 425d46486c0f59444b7b2be9fac06de9, type: 3}
+  - {fileID: 21300000, guid: 79830f9904f294b0985ee12dc19c5787, type: 3}
   - {fileID: 1362121482, guid: fa9008ba27d044823835d85918621932, type: 3}
   - {fileID: -1484209307, guid: fa9008ba27d044823835d85918621932, type: 3}
   - {fileID: 1558156927, guid: fa9008ba27d044823835d85918621932, type: 3}
@@ -450,7 +465,26 @@ SpriteAtlas:
   - {fileID: -1325417896, guid: fa9008ba27d044823835d85918621932, type: 3}
   - {fileID: 871889569, guid: fa9008ba27d044823835d85918621932, type: 3}
   - {fileID: -728916601, guid: fa9008ba27d044823835d85918621932, type: 3}
+  - {fileID: 21300000, guid: aa94c6da14ecf4a8690f02549a9ac6a7, type: 3}
+  - {fileID: 21300000, guid: 3d1d3a4c2da95544ea918f1f17a19954, type: 3}
+  - {fileID: 21300000, guid: 8c69f3cd16f534bec8236a6484f500d4, type: 3}
+  - {fileID: 21300000, guid: b52a57bea9b6a47e096e15fd1bbe2fb0, type: 3}
+  - {fileID: 21300000, guid: b3d6035f6aea241b890878b6ab7a906b, type: 3}
+  - {fileID: 21300000, guid: c008626f5108946299e1a584ba85fa5b, type: 3}
+  - {fileID: 21300000, guid: 0d8580bf6a8d0490ababa91f75326fbb, type: 3}
   m_PackedSpriteNamesToIndex:
+  - collision_0
+  - collision_1
+  - collision_2
+  - DamageZone
+  - stake
+  - trunk
+  - tree-dried
+  - rock
+  - rock-monument
+  - bush
+  - fence
+  - waterfall-3
   - tileset_326
   - tileset_350
   - tileset_329
@@ -851,6 +885,13 @@ SpriteAtlas:
   - tileset_356
   - tileset_327
   - tileset_357
+  - bush-tall
+  - rock 1
+  - tree-orange
+  - sign
+  - waterfall-1
+  - tree-pink
+  - waterfall-2
   m_RenderDataMap: {}
   m_Tag: TileAtlas
   m_IsVariant: 0
