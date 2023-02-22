@@ -147,3 +147,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleVFX: {fileID: 3657250875348756722, guid: bea87c84448ef824e9c760f5cf67f532, type: 3}
+  damage: -1

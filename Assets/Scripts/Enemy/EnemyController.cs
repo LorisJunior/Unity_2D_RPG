@@ -2,106 +2,107 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    [SerializeField] private SO_AudioManager audioManager;
+    [SerializeField] private SO_DropItems dropList;
+
     public GameObject deathVFX;
-    public AudioClip die;
     public UIHealthBar UIHealth;
-    public int maxHealth = 3;
-    public GameObject coin;
-    public GameObject heart;
-    public GameObject gem;
-    public int damage = -1;
-    public float speed = 3f;
     public bool vertical;
     public float changeTime = 2f;
 
-    PlayerController controller;
-    int currentHealth;
-    Animator animator;
-    Rigidbody2D rigidbody2d;
-    int direction = -1;
-    float timer;
-    // Start is called before the first frame update
-    void Start()
+    private int currentHealth;
+    private Animator animator;
+    private Rigidbody2D rigidbody2d;
+    private int direction = -1;
+    private float changeDirectionTime = 0;
+
+    private void Start()
     {
-        controller = GameObject.Find("Player").GetComponent<PlayerController>();
-        currentHealth = maxHealth;
+        currentHealth = Settings.enemyMaxHealth;
         animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
-        timer = changeTime;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        timer -= Time.deltaTime;
+        ChangeDirection();
+        EnemyMovement();
+    }
 
-        if (timer < 0)
+    // Change Direction of the enemy after some time
+    private void ChangeDirection()
+    {
+        if (Time.time >= changeDirectionTime)
         {
             direction = -direction;
-            timer = changeTime;
+            changeDirectionTime = Time.time + changeTime;
         }
     }
 
-    void FixedUpdate() 
+    private void EnemyMovement()
     {
         Vector2 position = rigidbody2d.position;
 
         if (vertical)
         {
-            animator.SetFloat("Move Y", direction);
-            animator.SetFloat("Move X", 0);
-            position.y += speed * Time.deltaTime * direction;
+            animator.SetFloat(Settings.moveY, direction);
+            animator.SetFloat(Settings.moveX, 0);
+            position.y += Settings.enemySpeed * Time.deltaTime * direction;
         }
         else
         {
-            animator.SetFloat("Move Y", 0);
-            animator.SetFloat("Move X", direction);
-            position.x += speed * Time.deltaTime * direction;
+            animator.SetFloat(Settings.moveY, 0);
+            animator.SetFloat(Settings.moveX, direction);
+            position.x += Settings.enemySpeed * Time.deltaTime * direction;
         }
 
         rigidbody2d.MovePosition(position);
     }
 
-    void OnCollisionEnter2D(Collision2D other) 
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        PlayerController controller = other.gameObject.GetComponent<PlayerController>();
+        bool isPlayer = other.gameObject.CompareTag(Tags.player);
 
-        if (controller != null)
+        if (isPlayer)
         {
-            controller.ChangeHealth(damage);
+            Attack();
         }
     }
 
-    void DropLoot()
+    private void Attack()
     {
-        int lootChance = Random.Range(1,101);
-
-        if (lootChance <= 50)
-            Instantiate(coin, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
-        if (lootChance > 50 && lootChance <= 75)
-            Instantiate(heart,rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
-        if (lootChance > 75)
-            Instantiate(gem,rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
+        EventHandler.CallChangeHealthEvent(Settings.enemyDamage);
     }
 
-    void Die()
+    private void Die()
     {
         Instantiate(deathVFX, rigidbody2d.position + Vector2.up * 0.7f, Quaternion.identity);
-        controller.PlaySound(die);
+        EventHandler.CallPlaySoundEvent(audioManager.GetAudioClip(Settings.mobDeathSound));
         DropLoot();
         Destroy(gameObject);
     }
 
-    public void ChangeHealth(int amount)
+    private void DropLoot()
     {
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        int lootChance = Random.Range(1, 101);
 
-        UIHealth.SetValue(currentHealth/(float)maxHealth);
+        if (lootChance <= 50)
+            Instantiate(dropList.GetDropItem(Settings.coin), rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
+        if (lootChance > 50 && lootChance <= 75)
+            Instantiate(dropList.GetDropItem(Settings.heart), rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
+        if (lootChance > 75)
+            Instantiate(dropList.GetDropItem(Settings.gem), rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + damage, 0, Settings.enemyMaxHealth);
+
+        UIHealth.SetValue(currentHealth / (float)Settings.enemyMaxHealth);
 
         if (currentHealth == 0)
         {
             Die();
         }
     }
-    
 }

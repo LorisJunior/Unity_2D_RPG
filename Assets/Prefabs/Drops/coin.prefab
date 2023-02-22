@@ -125,8 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 162391b8ed5bee142a9f43dc72fea13a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioClip: {fileID: 8300000, guid: dce6ea8b8b0f64b499a5a16d38e20ebd, type: 3}
-  amount: 1
+  audioManager: {fileID: 11400000, guid: 2841eb7fe16a9d24c945d8c2982b0924, type: 2}
+  coinAmount: 1
 --- !u!95 &4280389766291914303
 Animator:
   serializedVersion: 5

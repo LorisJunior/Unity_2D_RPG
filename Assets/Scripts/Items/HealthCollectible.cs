@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class HealthCollectible : MonoBehaviour
 {
-    public AudioClip audioClip;
-    public int amount = 1;
+    [SerializeField] private SO_AudioManager audioManager;
+    
+    [SerializeField] private int recoveryAmount = 1;
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
@@ -11,10 +12,11 @@ public class HealthCollectible : MonoBehaviour
 
         if (controller != null)
         {
-            if (controller.Health < controller.maxHealth)
+            //Verify if player health is full
+            if (controller.Health < Settings.maxHealth)
             {
-                controller.ChangeHealth(amount);
-                controller.PlaySound(audioClip);
+                EventHandler.CallChangeHealthEvent(recoveryAmount);
+                EventHandler.CallPlaySoundEvent(audioManager.GetAudioClip(Settings.heartSound));
                 Destroy(gameObject);
             }
         }

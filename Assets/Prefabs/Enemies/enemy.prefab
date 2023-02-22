@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 2190740223406088795}
   m_Layer: 0
   m_Name: enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -340,15 +340,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f58cf66389b2d2347ad0c175c4aec722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioManager: {fileID: 11400000, guid: 2841eb7fe16a9d24c945d8c2982b0924, type: 2}
+  dropList: {fileID: 11400000, guid: 27936876c8c525644893254b14dfba8e, type: 2}
   deathVFX: {fileID: 4905852504621184333, guid: bb41a687acefcf341bdb50732520422b, type: 3}
-  die: {fileID: 8300000, guid: c6546a87ec8cd8e4d8cc50ea7b624513, type: 3}
   UIHealth: {fileID: 2906306522043516529}
-  maxHealth: 3
-  coin: {fileID: 493549038805875595, guid: fd5dba9f7ee29394db9f91a27a8176f0, type: 3}
-  heart: {fileID: 2775847933417242191, guid: 8fe376a7265edb441bf26693ef74e9bf, type: 3}
-  gem: {fileID: 2864401668642017625, guid: bf2289f2591786a42a129d9f755dd188, type: 3}
-  damage: -1
-  speed: 3
   vertical: 0
   changeTime: 2
 --- !u!95 &2190740223406088795

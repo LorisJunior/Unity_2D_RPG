@@ -3,50 +3,80 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    public AudioClip hurt;
-    public AudioClip footsteps;
-    public AudioClip questSound;
-    public AudioClip arrowSound;
-    public float attackInterval = 0.5f;
+    [SerializeField] private SO_AudioManager audioManager;
+
     public UICoinText coinText;
     public UIHealthBar UIHealth;
     public GameObject arrowPrefab;
-    public float timeInvincible = 2f;
-    public int maxHealth = 5;
-    public float speed = 3f;
-    public int Health {get => currentHealth;}
+    public int Health => currentHealth;
 
-    AudioSource audioSource;
-    float attackTimer;
-    bool canAttack = true;
-    Rigidbody2D rigidbody2d;
-    float horizontal;
-    float vertical;
-    int currentHealth;
-    int coinAmount = 0;
-    bool isInvincible;
-    float invincibleTimer;
-    Animator animator;
-    Vector2 lookDirection = new Vector2(1,0);
-    Vector3 zAxis = new Vector3(0, 0, 1);
+    private AudioSource audioSource;
+    private Rigidbody2D rigidbody2d;
+    private Animator animator;
+    private int currentHealth;
+    private float horizontal;
+    private float vertical;
+    private int coinAmount = 0;
+    private float nextAttackTime = 0f;
+    private float nextDamageTime = 0f;
+    private Vector2 lookDirection = new Vector2(1, 0);
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
+    {
+        EventHandler.PlaySoundEvent += PlaySound;
+        EventHandler.IncreaseCoinEvent += IncreaseCoin;
+        EventHandler.ChangeHealthEvent += ChangeHealth;
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.PlaySoundEvent -= PlaySound;
+        EventHandler.IncreaseCoinEvent -= IncreaseCoin;
+        EventHandler.ChangeHealthEvent -= ChangeHealth;
+    }
+
+    private void Start()
     {
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
         rigidbody2d = GetComponent<Rigidbody2D>();
-        currentHealth = maxHealth;
+        currentHealth = Settings.maxHealth;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        #region Player Input
+
+        PlayerMovementInput();
+
+        LaunchArrow();
+
+        Interact();
+
+        #endregion
+    }
+
+    private void FixedUpdate()
+    {
+        PlayerMovement();
+    }
+
+    private void PlayerMovementInput()
+    {
+        // Horizontal and Vertical input
+
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
-        //Deactivate invincible mode after some seconds
-        InvincibleTime();
+        // If player is moving in diagonal adjust speed
+
+        if (horizontal != 0 && vertical != 0)
+        {
+            horizontal *= 0.71f;
+            vertical *= 0.71f;
+        }
+
+        // Get player look direction and when is moving
 
         Vector2 move = new Vector2(horizontal, vertical);
 
@@ -56,25 +86,44 @@ public class PlayerController : MonoBehaviour
             lookDirection.Normalize();
         }
 
-        animator.SetFloat("Look X", lookDirection.x);
-        animator.SetFloat("Look Y", lookDirection.y);
-        animator.SetFloat("Speed", move.magnitude);
+        // Set animator parameters
 
-        if (!canAttack)
+        animator.SetFloat(Settings.lookX, lookDirection.x);
+        animator.SetFloat(Settings.lookY, lookDirection.y);
+        animator.SetFloat(Settings.animSpeed, move.magnitude);
+    }
+
+    private void PlayerMovement()
+    {
+        Vector2 position = rigidbody2d.position;
+
+        position.x += Settings.playerSpeed * Time.deltaTime * horizontal;
+        position.y += Settings.playerSpeed * Time.deltaTime * vertical;
+
+        rigidbody2d.MovePosition(position);
+    }
+
+    private void LaunchArrow()
+    {
+        if (Time.time >= nextAttackTime && Input.GetKeyDown(KeyCode.Space))
         {
-            attackTimer -= Time.deltaTime;
+            //Rotate the arrow in the look direction
+            float angle = Vector2.SignedAngle(Vector2.up, lookDirection);
+            GameObject arrowObject = Instantiate(arrowPrefab, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.AngleAxis(angle, Vector3.forward));
 
-            if (attackTimer < 0)
-                canAttack = true;
+            Projectile arrow = arrowObject.GetComponent<Projectile>();
+            arrow.Launch(lookDirection, Settings.projectileForce);
+
+            //Trigger Launch animation and Arrow sound
+            animator.SetTrigger(Settings.launch);
+            PlaySound(audioManager.GetAudioClip(Settings.arrowSound));
+
+            nextAttackTime = Time.time + Settings.attackRate;
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.Space) && canAttack)
-        {
-            Attack();
-            canAttack = false;
-            attackTimer = attackInterval;
-        }
-
+    private void Interact()
+    {
         if (Input.GetKeyDown(KeyCode.E))
         {
             RaycastHit2D hit = Physics2D.Raycast(rigidbody2d.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
@@ -87,89 +136,53 @@ public class PlayerController : MonoBehaviour
                 if (quest != null)
                 {
                     quest.DisplayQuest();
-                    PlaySound(questSound);
+                    PlaySound(audioManager.GetAudioClip(Settings.questSound));
                 }
             }
         }
-
-        HandleFootstep(move);
     }
 
-    void FixedUpdate() 
-    {
-        Vector2 position = rigidbody2d.position;
-
-        position.x += speed * Time.deltaTime * horizontal;
-        position.y += speed * Time.deltaTime * vertical;
-
-        rigidbody2d.MovePosition(position);
-    }
-
-    void InvincibleTime()
-    {
-        if (isInvincible)
-        {
-            invincibleTimer -= Time.deltaTime;
-
-            if (invincibleTimer < 0)
-            {
-                isInvincible = false;
-            }
-        }
-    }
-
-    void HandleFootstep(Vector2 move)
-    {
-        
-    }
-
-    void Attack()
-    {
-        GameObject arrowObject = Instantiate(arrowPrefab, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
-
-        //Rotate the arrow in the look direction
-        float angle = Vector2.SignedAngle(Vector2.right, lookDirection) -90f;
-        arrowObject.transform.rotation = Quaternion.AngleAxis(angle, zAxis);
-
-        Projectile arrow = arrowObject.GetComponent<Projectile>();
-        arrow.Launch(lookDirection, 300f);
-
-        animator.SetTrigger("Attack");
-        PlaySound(arrowSound);
-    }
-    
-    public void ChangeHealth(int amount)
+    private void ChangeHealth(int amount)
     {
         if (amount < 0)
         {
-            if(isInvincible)
+            if (Time.time < nextDamageTime)
                 return;
 
-            //Activate player invincible mode
+            TakeDamage();
 
-            isInvincible = true;
-            invincibleTimer = timeInvincible;
-
-            animator.SetTrigger("Hit");
-            PlaySound(hurt);
+            // Next time player can take damage
+            nextDamageTime = Time.time + Settings.timeInvincible;
         }
 
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        UIHealth.SetValue(currentHealth/(float)maxHealth);
+        UpdateHealth(amount);
 
-        if(currentHealth == 0)
+        if (currentHealth == 0)
         {
+            // If player die reload the level
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
-    public void IncreaseCoin(int amount)
+    private void TakeDamage()
+    {
+        animator.SetTrigger(Settings.hit);
+        PlaySound(audioManager.GetAudioClip(Settings.hurtSound));
+    }
+
+    private void UpdateHealth(int amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, Settings.maxHealth);
+        UIHealth.SetValue(currentHealth / (float)Settings.maxHealth);
+    }
+
+    private void IncreaseCoin(int amount)
     {
         coinAmount += amount;
         coinText.IncreaseCoinUI(coinAmount);
     }
 
-    public void PlaySound(AudioClip audioClip)
+    private void PlaySound(AudioClip audioClip)
     {
         audioSource.PlayOneShot(audioClip);
     }

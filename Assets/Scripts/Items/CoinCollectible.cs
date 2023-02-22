@@ -2,17 +2,15 @@ using UnityEngine;
 
 public class CoinCollectible : MonoBehaviour
 {
-    public AudioClip audioClip;
-    public int amount = 1;
+    [SerializeField] private SO_AudioManager audioManager;
+    [SerializeField] private int coinAmount = 1;
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        PlayerController controller = other.GetComponent<PlayerController>();
-
-        if (controller != null)    
+        if (other.CompareTag(Tags.player))
         {
-            controller.IncreaseCoin(amount);
-            controller.PlaySound(audioClip);
+            EventHandler.CallIncreaseCoinEvent(coinAmount);
+            EventHandler.CallPlaySoundEvent(audioManager.GetAudioClip(Settings.collectableSound));
             Destroy(gameObject);
         }
     }

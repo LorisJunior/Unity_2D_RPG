@@ -6986,7 +6986,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &172251193
 PrefabInstance:
@@ -7425,7 +7425,7 @@ RectTransform:
   - {fileID: 211714315}
   - {fileID: 1314806166}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -8039,7 +8039,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2190740223406088784, guid: 871702f88aa7b7444b35ae3dfddaa600, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.833853
+      value: 2.12
       objectReference: {fileID: 0}
     - target: {fileID: 2190740223406088784, guid: 871702f88aa7b7444b35ae3dfddaa600, type: 3}
       propertyPath: m_LocalPosition.y
@@ -64280,7 +64280,7 @@ Transform:
   - {fileID: 147073746}
   - {fileID: 1352736226}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1824208584
 GameObject:
@@ -64409,7 +64409,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1824208587
 AudioSource:
@@ -65685,17 +65685,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69c7155bf8280d34c92fa4b06c28faed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hurt: {fileID: 8300000, guid: 3cf567438daa46347a3c1972b09de43b, type: 3}
-  footsteps: {fileID: 8300000, guid: c456b5964160d324d97c4bb679fdeed9, type: 3}
-  questSound: {fileID: 8300000, guid: 7739b2cdbf62fb140a35bed8109c8fc1, type: 3}
-  arrowSound: {fileID: 8300000, guid: ffe500104f91ad24d82614b5d219a5e1, type: 3}
-  attackInterval: 0.7
+  audioManager: {fileID: 11400000, guid: 2841eb7fe16a9d24c945d8c2982b0924, type: 2}
   coinText: {fileID: 987966789}
   UIHealth: {fileID: 1314806169}
   arrowPrefab: {fileID: 5402246564172012761, guid: 84b4cc0f7498a2d4080c9ae73107ba29, type: 3}
-  timeInvincible: 2
-  maxHealth: 5
-  speed: 4
 --- !u!1 &8308696113934659641
 GameObject:
   m_ObjectHideFlags: 0
@@ -65713,7 +65706,7 @@ GameObject:
   - component: {fileID: 4158828876238470232}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
